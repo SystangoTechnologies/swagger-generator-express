@@ -16,7 +16,7 @@
     "name": "systango-technologies",
     "email": "engineering@systango.com"
   },
-  "homepage": "https://github.com/SystangoTechnologies/swagger-generator-koa/blob/master/README.md",
+  "homepage": "https://github.com/SystangoTechnologies/swagger-generator-express/blob/master/README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/SystangoTechnologies/swagger-generator-express"

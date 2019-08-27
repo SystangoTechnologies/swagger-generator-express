@@ -1,6 +1,9 @@
 # swagger-generator-express
 
-Module to generate swagger for express apis with minimum additional effort.
+NPM module to generate swagger documentation for Express APIss with minimum additional effort.
+
+## Description
+This NPM module let's you generate swagger (OpenAPI) documentation for your APIs without putting in much extra efforts. You just need to follow the convention for your request and response objects, and the module will take care of the rest. This module will cover your controllers, API specs along with request and response object structures.
 
 
 ## Usage ##
@@ -18,7 +21,7 @@ const express = require("express");
 const app = express();
 const swagger = require("swagger-generator-express");
 
-// Define you router here
+// Define your router here
 
 const options = {
 	title: "swagger-generator-express",
@@ -85,9 +88,9 @@ module.exports = router;
 
 ## Request Model `/requestModel/user.js`
   - File name for request model should be same as router file.
-  - Define request model with there order of apis in router js file. For example first api in user router is create user so we define createUser schema with key 0.
+  - Define request model with their order of apis in router js file. For example first api in user router is create user so you need to define createUser schema with key 0.
   - Add boolean flag "excludeFromSwagger" inside requestmodel if you want to exclude any particular api from swagger documentation.
-  - This Request model can also be used for request params validation.
+  - This Request model follows Joi module conventions, so it can also be used for request parameters validation.
 
 ```javascript
 const Joi = require("@hapi/joi");
@@ -146,15 +149,15 @@ module.exports = {
 ## Response Model `/responseModel/user.js`
 
  - File name for response model should be same as router file.
- - Response name should be sane as model name from requestmodel. For example model name of create user api is "createUser" so key for response object will be "createUser".
- - Inside response model define responses with respect to there status code return from apis.
+ - Response name should be same as model name from requestmodel. For example model name of create user api is "createUser" so key for response object will be "createUser".
+ - Inside response model define responses with respect to their status code returned from apis.
 
 ```javascript
 
-// The name of each response payload should be  model name defined in Request model schema.
+// The name of each response payload should be model name defined in Request model schema.
 
 module.exports = {
-    createUser: { // This name should ne model name defined in request model.
+    createUser: { // This name should be model name defined in request model.
         201: {
             message: "User created successfully"
         },
@@ -203,15 +206,10 @@ module.exports = {
 
 Open `http://`<app_host>`:`<app_port>`/swagger` in your browser to view the documentation.
 
-## Requirements
+## Pre-requisite
 
 - Node v10 or above
 - Express 4 or above
-
-## Testing
-
-- `npm install`
-- `npm test`
 
 ## Contributors
 
