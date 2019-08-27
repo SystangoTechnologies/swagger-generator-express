@@ -79,4 +79,7 @@ dist
 .fusebox/
 
 #DynamoDB Local files 
-.dynamodb/ 
+.dynamodb/
+
+#Mac
+.DS_Store
