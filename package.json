@@ -1,0 +1,57 @@
+{
+  "name": "swagger-generator-express",
+  "title": "swagger-generator-express",
+  "version": "1.0.0",
+  "description": "Generate swagger documentation automatically using joi validation.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "build": "tsc",
+  "build:watch": "tsc --watch",
+  "prepublish": "tsc",
+  "scripts": {
+    "lint": "tslint --project \"./tsconfig.json\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "systango-technologies",
+    "email": "engineering@systango.com"
+  },
+  "homepage": "https://github.com/SystangoTechnologies/swagger-generator-koa/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SystangoTechnologies/swagger-generator-express"
+  },
+  "keywords": [
+    "swagger",
+    "express",
+    "ui",
+    "json",
+    "joi",
+    "auto",
+    "automatic",
+    "documentation"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "systango-technologies",
+      "email": "engineering@systango.com"
+    }
+  ],
+  "dependencies": {
+    "@types/joi": "^14.3.3",
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "joi-to-swagger": "^3.2.0",
+    "lodash": "^4.17.15",
+    "swagger-spec-express": "^2.0.18",
+    "swagger-ui-express": "^4.0.7"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.136",
+    "@types/node": "^12.7.1",
+    "@types/swagger-ui-express": "^3.0.1",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  }
+}
