@@ -29,7 +29,8 @@
     "joi",
     "auto",
     "automatic",
-    "documentation"
+    "documentation",
+    "openapi"
   ],
   "license": "MIT",
   "maintainers": [
