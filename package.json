@@ -1,16 +1,16 @@
 {
   "name": "swagger-generator-express",
   "title": "swagger-generator-express",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generate swagger documentation automatically using joi validation.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "build": "tsc",
-  "build:watch": "tsc --watch",
-  "prepublish": "tsc",
   "scripts": {
     "lint": "tslint --project \"./tsconfig.json\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "prepublish": "tsc"
   },
   "author": {
     "name": "systango-technologies",
@@ -45,14 +45,21 @@
     "joi": "^14.3.1",
     "joi-to-swagger": "^3.2.0",
     "lodash": "^4.17.15",
-    "swagger-spec-express": "^2.0.18",
+    "swagger-spec-express": "^2.0.19",
     "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.136",
-    "@types/node": "^12.7.1",
+    "@types/lodash": "^4.14.138",
+    "@types/node": "^12.7.2",
     "@types/swagger-ui-express": "^3.0.1",
-    "tslint": "^5.18.0",
+    "tslint": "^5.19.0",
     "typescript": "^3.5.3"
-  }
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/responsesEnum.js",
+    "dist/responsesEnum.d.ts",
+    "README.md"
+  ]
 }
