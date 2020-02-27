@@ -1,7 +1,7 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-var validation = require('express-validation');
+var validation = require('../middleware/validate');
 var userController = require('../controller/user');
 var requestModel = require('../requestModel/users');
 

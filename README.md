@@ -62,7 +62,7 @@ swagger.serveSwagger(app, "/swagger", options, {routePath : './src/routes/', req
 'use strict';
 var express = require('express');
 var router = express.Router();
-var validation = require('express-validation');
+var validation = require('../middleware/validate');
 var userController = require('../controller/user');
 var requestModel = require('../requestModel/users');
 
@@ -158,49 +158,95 @@ module.exports = {
 
 // The name of each response payload should be model name defined in Request model schema.
 
+// The name of each response payload should be  model name defined in Request model schema and should sufix with ResponseModel.
+
 module.exports = {
-    createUser: { // This name should be model name defined in request model.
+    createUser: {
         201: {
-            message: "User created successfully"
+            message: {
+                type: 'string'
+            }
         },
         500: {
-            internal: "Server Error"
+            internal: {
+                type: 'string'
+            }
         }
     },
     getUsers: {
         200: [{
-            id: 'number',
-            firstName: 'string',
-            lastName: 'string',
-            address: 'string',
-            contact: 'number',
-            createdAt: 'date',
-            updatedAt: 'date'
+            id: {
+                type: 'number'
+            },
+            firstName: {
+                type: 'string',
+                pattern: '^\d{3}-\d{2}-\d{4}$'
+            },
+            lastName: {
+                type: 'string'
+            },
+            address: {
+                type: 'string'
+            },
+            contact: {
+                type: 'number'
+            },
+            createdAt: {
+                type: 'string',
+                format: 'date-time'
+            },
+            updatedAt: {
+                type: 'string',
+                format: 'date-time'
+            }
         }],
         500: {
-            internal: "Server Error"
+            internal: "string"
         }
     },
-    updateUser:{
+    updateUser: {
         201: {
-            message: "User Updated successfully"
+            message: {
+                type: 'string'
+            }
         },
         500: {
-            internal: "Server Error"
+            internal: {
+                type: 'string'
+            }
         }
     },
     getUserDetails: {
         200: {
-            id: 'number',
-            firstName: 'string',
-            lastName: 'string',
-            address: 'string',
-            contact: 'number',
-            createdAt: 'date',
-            updatedAt: 'date'
+            id: {
+                type: 'number'
+            },
+            firstName: {
+                type: 'string',
+                pattern: '^\d{3}-\d{2}-\d{4}$'
+            },
+            lastName: {
+                type: 'string'
+            },
+            address: {
+                type: 'string'
+            },
+            contact: {
+                type: 'number'
+            },
+            createdAt: {
+                type: 'string',
+                format: 'date-time'
+            },
+            updatedAt: {
+                type: 'string',
+                format: 'date-time'
+            }
         },
         500: {
-            internal: "Server Error"
+            internal: {
+                type: 'string'
+            }
         }
     },
 };

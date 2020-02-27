@@ -26,7 +26,30 @@ export = {
  */
 
 function createResponseModel({ responseModel, name }: { responseModel: any; name: string }) {
-  const bodyParameter = j2s(responseModel).swagger;
+  let isArray = false;
+  if (responseModel && Array.isArray(responseModel) && responseModel.length) {
+    isArray = true;
+    responseModel = responseModel[0];
+  }
+  for (const property in responseModel) {
+    if (typeof responseModel[property] === 'string') {
+      responseModel[property] = {
+        type: responseModel[property],
+      };
+    }
+  }
+  const bodyParameter: any = {
+    type: isArray ? 'array' : 'object',
+  };
+
+  if (isArray) {
+    bodyParameter.items = {
+      type: 'object',
+      properties: responseModel,
+    };
+  } else {
+    bodyParameter.properties = responseModel;
+  }
   const model = Object.assign(
     {
       name,
@@ -69,24 +92,31 @@ function createResponses(schema: any, responseModel: any, describe: any) {
       description: responsesEnum[500],
     },
   };
-  if (responseModel && !isEmpty(responseModel)) {
-    for (const key in responseModel) {
-      if (responseModel.hasOwnProperty(key)) {
-        createResponseModel({
-          responseModel: responseModel[key],
-          name: `${schema.model}${key}ResponseModel`,
-        });
-        responses[key] = {
-          description: responsesEnum[key] ? responsesEnum[key] : '',
-          schema: {
-            $ref: `#/definitions/${schema.model}${key}ResponseModel`,
-          },
-        };
+  try {
+    if (responseModel && !isEmpty(responseModel)) {
+      for (const key in responseModel) {
+        if (responseModel.hasOwnProperty(key)) {
+          createResponseModel({
+            responseModel: responseModel[key],
+            name: `${schema.model}${key}ResponseModel`,
+          });
+          responses[key] = {
+            description: responsesEnum[key] ? responsesEnum[key] : '',
+            schema: {
+              $ref: `#/definitions/${schema.model}${key}ResponseModel`,
+            },
+          };
+        }
       }
     }
+    describe.responses = responses;
+    return describe;
+  } catch (error) {
+    console.log('responseModel', responseModel);
+    console.log('Error while generting response model for swagger', error);
+    describe.responses = responses;
+    return describe;
   }
-  describe.responses = responses;
-  return describe;
 }
 
 /**
@@ -103,7 +133,7 @@ function getHeader(schema: any, describe: any) {
       const query = schema[key];
       const queryObject = {
         name: key,
-        type: query._type ? query._type : query,
+        type: query.type ? query.type : query,
         required: query.required === 'undefined' ? false : true,
       };
       if (query._flags && query._flags.presence) {
@@ -140,7 +170,7 @@ function getQueryAndPathParamObj(schema: any, value: string, describe: any) {
 
       const queryObject = {
         name: key,
-        type: query._type ? query._type : query,
+        type: query.type ? query.type : query,
         required: query.required === 'undefined' ? false : true,
       };
       if (query._flags && query._flags.presence) {
@@ -242,7 +272,7 @@ function createModel(schema: any, responseModel: { [x: string]: any; hasOwnPrope
  */
 function describeSwagger(routePath: string, requestModelPath: string, responseModelPath: any) {
   try {
-    const rootPath = resolve(__dirname).split('/node_modules')[0];
+    const rootPath = resolve(__dirname).split('node_modules')[0];
     fs.readdirSync(join(rootPath, routePath)).forEach((file: any) => {
       if (!file) {
         console.log('No router file found in given folder');
@@ -258,14 +288,24 @@ function describeSwagger(routePath: string, requestModelPath: string, responseMo
       }
       router = router.router || router;
 
-      const responseModelFullPath = join(rootPath, responseModelPath, file);
-      const requestModelFullPath = join(rootPath, requestModelPath, file);
-      if (fs.existsSync(requestModelFullPath)) {
-        requestModel = require(requestModelFullPath);
+      if (responseModelPath) {
+        const responseModelFullPath = join(rootPath, responseModelPath, file);
+        if (fs.existsSync(responseModelFullPath)) {
+          responseModel = require(responseModelFullPath);
+        } else {
+          console.log('Response model path does not exist responseModelFullPath->', responseModelFullPath);
+        }
       }
-      if (fs.existsSync(responseModelFullPath)) {
-        responseModel = require(responseModelFullPath);
+
+      if (requestModelPath) {
+        const requestModelFullPath = join(rootPath, requestModelPath, file);
+        if (fs.existsSync(requestModelFullPath)) {
+          requestModel = require(requestModelFullPath);
+        } else {
+          console.log('Response model path does not exist requestModelFullPath->', requestModelFullPath);
+        }
       }
+
       processRouter(router, requestModel, responseModel, file.split('.')[0]);
     });
   } catch (error) {

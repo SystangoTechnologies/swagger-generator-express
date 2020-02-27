@@ -21,7 +21,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use(function (err, req, res, next) {
-    res.status(err.status).json(err);
+    let statusCode = err.status || 500;
+    res.status(statusCode).json(err);
 });
 
 const options = {

@@ -1,0 +1,108 @@
+'use strict';
+const Joi = require("@hapi/joi");
+var assignIn = require('lodash/assignIn');
+var find = require('lodash/find');
+var defaults = require('lodash/defaults');
+var ValidationError = require('../utils/validation-error');
+
+var defaultOptions = {
+    contextRequest: false,
+    allowUnknownHeaders: true,
+    allowUnknownBody: true,
+    allowUnknownQuery: true,
+    allowUnknownParams: true,
+    allowUnknownCookies: true,
+    status: 400,
+    statusText: 'Bad Request'
+};
+var globalOptions = {};
+
+// maps the corresponding request object to an `express-validation` option
+var unknownMap = {
+    headers: 'allowUnknownHeaders',
+    body: 'allowUnknownBody',
+    query: 'allowUnknownQuery',
+    params: 'allowUnknownParams',
+    cookies: 'allowUnknownCookies'
+};
+
+exports = module.exports = function expressValidation(schema) {
+    if (!schema) throw new Error('Please provide a validation schema');
+
+    return async function (req, res, next) {
+        var errors = [];
+
+        // Set default options
+        var options = defaults({}, schema.options || {}, globalOptions, defaultOptions);
+
+        // NOTE: mutates `errors`
+        let requestInputType = ['headers', 'body', 'query', 'params', 'cookies'];
+        for (let index = 0; index < requestInputType.length; index++) {
+            const key = requestInputType[index];
+            var allowUnknown = options[unknownMap[key]];
+            var entireContext = options.contextRequest ? req : null;
+            if (schema[key]) {
+                await validate(errors, req[key], schema[key], key, allowUnknown, entireContext);
+            }
+        }
+      if (errors && errors.length === 0) return next();
+
+        return next(new ValidationError(errors, options));
+    };
+};
+
+exports.ValidationError = ValidationError;
+
+exports.options = function (opts) {
+    if (!opts) {
+        globalOptions = {};
+        return;
+    }
+
+    globalOptions = defaults({}, globalOptions, opts);
+};
+
+/**
+ * validate checks the current `Request` for validations
+ * NOTE: mutates `request` in case the object is valid.
+ */
+async function validate(errObj, request, schema, location, allowUnknown, context) {
+    if (!request || !schema) return;
+
+    var joiOptions = {
+        context: context || request,
+        allowUnknown: allowUnknown,
+        abortEarly: false
+    };
+
+    var {
+        error,
+        value
+    } = await Joi.object(schema).validate(request, joiOptions);
+    let errors = error;
+    if (!errors || errors.details.length === 0) {
+        assignIn(request, value); // joi responses are parsed into JSON
+        return;
+    }
+    errors.details.forEach(function (error) {
+        var errorExists = find(errObj, function (item) {
+            if (item && item.field === error.path && item.location === location) {
+                item.messages.push(error.message);
+                item.types.push(error.type);
+                return item;
+            }
+            return;
+        });
+
+        if (!errorExists) {
+            errObj.push({
+                field: error.path,
+                location: location,
+                messages: [error.message],
+                types: [error.type]
+            });
+        }
+
+    });
+    return errObj;
+};
