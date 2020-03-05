@@ -1,7 +1,7 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-var validation = require('../middleware/validate');
+var { validation } = require('swagger-generator-express');
 var userController = require('../controller/user');
 var requestModel = require('../requestModel/users');
 

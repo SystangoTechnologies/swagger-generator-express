@@ -5,7 +5,7 @@ NPM module to generate swagger documentation for Express APIs with minimum addit
 >[![Downloads](https://badgen.net/npm/dt/swagger-generator-express)](https://www.npmjs.com/package/swagger-generator-express) [![npm dependents](https://badgen.net/npm/dependents/swagger-generator-express)](https://www.npmjs.com/package/swagger-generator-express?activeTab=dependents)
 
 ## Description
-This NPM module let's you generate swagger (OpenAPI) documentation for your Express APIs without putting in much extra efforts. You just need to follow the convention for your request and response objects, and the module will take care of the rest. This module will cover your controllers, API specs along with request and response object structures.
+This NPM module let's you validate and generate swagger (OpenAPI) documentation for your Express APIs without putting in much extra efforts. You just need to follow the convention for your request and response objects, and the module will take care of the rest. This module will cover your controllers, API specs along with request and response object structures.
 
 
 ## Usage ##
@@ -62,7 +62,7 @@ swagger.serveSwagger(app, "/swagger", options, {routePath : './src/routes/', req
 'use strict';
 var express = require('express');
 var router = express.Router();
-var validation = require('../middleware/validate');
+var { validation } = require('swagger-generator-express');
 var userController = require('../controller/user');
 var requestModel = require('../requestModel/users');
 
@@ -253,6 +253,29 @@ module.exports = {
 ```
 
 Open `http://`<app_host>`:`<app_port>`/swagger` in your browser to view the documentation.
+
+## Request Parameter Validation
+
+- Use `validation` function exported from this module to validate request params.
+
+```javascript
+'use strict';
+var express = require('express');
+var router = express.Router();
+var { validation } = require('swagger-generator-express');
+var userController = require('../controller/user');
+var requestModel = require('../requestModel/users');
+
+/**
+ * Function: validation
+ * Use validation function to validate request parameter.
+ * @param schema Joi schema for request.
+ */
+router.post('/', validation(requestModel[0]), userController.createUser);
+
+module.exports = router;
+```
+
 
 ## Pre-requisite
 

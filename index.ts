@@ -6,6 +6,7 @@ import responsesEnum from './responsesEnum';
 import { isEmpty, map, get, has } from 'lodash';
 import fs from 'fs';
 import { resolve, join } from 'path';
+import expressValidation from './validation/validate';
 
 /**
  * This module will support all the functionality of swagger-spec-express with additonal
@@ -18,6 +19,7 @@ export = {
   swaggerize,
   createModel,
   serveSwagger,
+  validation: expressValidation
 };
 
 /**
