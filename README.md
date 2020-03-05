@@ -254,11 +254,11 @@ module.exports = {
 
 Open `http://`<app_host>`:`<app_port>`/swagger` in your browser to view the documentation.
 
-### version changes
+# Version changes
 
 ## v2.1.0
 
-# Request Parameter Validation 
+#### Added Request Parameter Validation Function
 
 - Use `validation` function exported from this module to validate request params.
 
