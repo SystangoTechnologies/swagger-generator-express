@@ -1,7 +1,7 @@
 {
   "name": "swagger-generator-express",
   "title": "swagger-generator-express",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Generate swagger documentation automatically using joi validation.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -62,6 +62,10 @@
     "dist/index.d.ts",
     "dist/responsesEnum.js",
     "dist/responsesEnum.d.ts",
+    "dist/validation/validate.d.ts",
+    "dist/validation/validate.js",
+    "dist/validation/validation-error.d.ts",
+    "dist/validation/validation-error.js",
     "README.md"
   ]
 }
